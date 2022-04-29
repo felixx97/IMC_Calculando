@@ -29,6 +29,38 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  TextEditingController weightController = TextEditingController();
+  TextEditingController heightController = TextEditingController();
+
+  String _infoText = 'Informe seus dados!';
+
+  void _resetFields() {
+    weightController.text = "";
+    heightController.text = "";
+    _infoText = "Informe seus dados";
+  }
+
+  void _calculate() {
+    setState(() {
+      double weight = double.parse(weightController.text);
+      double height = double.parse(heightController.text) / 100;
+      double imc = weight / (height * height);
+      if (imc < 18.6) {
+        _infoText = "Abaixo do peso (${imc.toStringAsPrecision(4)})";
+      } else if (imc >= 18.6 && imc < 24.9) {
+        _infoText = "Peso Ideal (${imc.toStringAsPrecision(4)})";
+      } else if (imc >= 24.9 && imc < 29.9) {
+        _infoText = " Levemente acima do peso (${imc.toStringAsPrecision(4)})";
+      } else if (imc >= 29.9 && imc < 34.9) {
+        _infoText = "Obesidade Grau I (${imc.toStringAsPrecision(4)})";
+      } else if (imc >= 34.9 && imc < 39.9) {
+        _infoText = "obesidade GRAU II (${imc.toStringAsPrecision(4)})";
+      } else if (imc >= 40) {
+        _infoText = "obesidade GRAU III (${imc.toStringAsPrecision(4)})";
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,7 +68,12 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text('Calculadora IMC'),
         centerTitle: true,
         backgroundColor: Colors.brown,
-        actions: [IconButton(icon: Icon(Icons.refresh), onPressed: () {})],
+        actions: [
+          IconButton(
+            icon: Icon(Icons.refresh),
+            onPressed: _resetFields,
+          ),
+        ],
       ),
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
@@ -57,6 +94,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               textAlign: TextAlign.center,
               style: TextStyle(color: Colors.green, fontSize: 25.0),
+              controller: weightController,
             ),
             TextField(
               keyboardType: TextInputType.number,
@@ -66,6 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               textAlign: TextAlign.center,
               style: TextStyle(color: Colors.green, fontSize: 25.0),
+              controller: heightController,
             ),
             Padding(
               padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
@@ -74,9 +113,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: ElevatedButton(
                   child: Text(
                     "calcular",
-                    style: TextStyle(color: Colors.red),
+                    style: TextStyle(color: Colors.white),
                   ),
-                  onPressed: () {},
+                  onPressed: _calculate,
                   style: ButtonStyle(
                     backgroundColor:
                         MaterialStateProperty.all<Color>(Colors.green),
@@ -85,7 +124,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             Text(
-              'INFO',
+              _infoText,
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.green,
