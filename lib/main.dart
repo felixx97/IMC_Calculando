@@ -133,7 +133,11 @@ class _MyHomePageState extends State<MyHomePage> {
                       "calcular",
                       style: TextStyle(color: Colors.white),
                     ),
-                    onPressed: _calculate,
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        _calculate();
+                      }
+                    },
                     style: ButtonStyle(
                       backgroundColor:
                           MaterialStateProperty.all<Color>(Colors.green),
